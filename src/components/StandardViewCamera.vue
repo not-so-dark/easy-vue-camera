@@ -5,6 +5,29 @@
         <div :class="{'visible-overlay': visibleOverlay}" class="overlay">
             <img :src="overlayMask" v-if="visibleMask">
         </div>
+
+        <div :class="{'background': !!picture}" class="camera-stack-controls">
+            <div class="camera-stack-controls-wrapper">
+                <div class="control-slot">
+                    <a @click="visibleMask = !visibleMask" class="secondary-button" role="button" v-if="overlayMask && !picture"><i class="mdi mdi-grid-large"></i></a>
+                </div>
+                <div class="control-slot">
+                    <a @click="$emit('snap')" role="button" v-if="!picture"><i class="mdi mdi-circle"></i></a>
+                    <a @click="approve" role="button" v-if="picture && mustApprove"><i class="mdi mdi-check"></i></a>
+                </div>
+                <div class="control-slot">
+                    <a @click="switchCamera(false)" 
+                        :disabled="switching" 
+                        class="secondary-button" 
+                        role="button" 
+                        v-if="multiDevice && !picture"><i class="mdi mdi-camera-switch"></i></a>
+                    <a @click="start"
+                        class="secondary-button"
+                        role="button"
+                        v-if="picture"><i class="mdi mdi-camera-retake-outline"></i></a>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -147,5 +170,51 @@ export default {
             height: auto;
         }
     }
+    .camera-stack-controls {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            padding: 5vh 0px;
+            &.background {
+                background-color: rgba(0, 0, 0, .8) !important;
+            }
+            .camera-stack-controls-wrapper {
+                max-width: 500px;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                margin: 0 auto;
+                .control-slot {
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    opacity: .8;
+                    a {
+                        color: #fff;
+                        border-radius: 100%;
+                        font-size: 35pt;
+                        padding: 8px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        box-shadow: 0px 0px 1px 2px #fff;
+                        i {
+                            &:before {
+                                display: block !important;
+                                line-height: normal !important;
+                            }
+                        }
+                        &.secondary-button {
+                            font-size: 15pt;
+                            padding: 10px;
+                        }
+                    }
+                }
+            }
+        }
 }
 </style>
